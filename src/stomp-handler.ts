@@ -68,6 +68,8 @@ export class StompHandler {
 
   public discardWebsocketOnCommFailure: boolean;
 
+  public onSocketDiscard: (socket: IStompSocket) => void;
+
   get connectedVersion(): string {
     return this._connectedVersion;
   }
@@ -337,6 +339,9 @@ export class StompHandler {
     };
 
     this._onclose(customCloseEvent);
+
+    // Allow user code to cleanup
+    this.onSocketDiscard(this._webSocket);
   }
 
   private _transmit(params: {

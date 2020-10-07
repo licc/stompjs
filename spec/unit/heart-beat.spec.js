@@ -73,7 +73,6 @@ describe('Ping', function () {
     };
 
     client.onWebSocketClose = ev => {
-      console.log('here');
       done();
     };
 
@@ -83,11 +82,21 @@ describe('Ping', function () {
   it('Should close connection when no incoming ping', incomingPingTest);
 
   describe('With discardWebsocketOnCommFailure', function () {
+    let onSocketDiscard = jasmine.createSpy('onSocketDiscard');
+
     beforeEach(function () {
       client.discardWebsocketOnCommFailure = true;
+      client.onSocketDiscard = onSocketDiscard;
     });
 
     it('Should close connection when no incoming ping', incomingPingTest);
+
+    afterEach(done => {
+      setTimeout(() => {
+        expect(onSocketDiscard).toHaveBeenCalled();
+        done();
+      }, 10);
+    });
   });
 
   it('Should close connection when no outgoing ping', function (done) {

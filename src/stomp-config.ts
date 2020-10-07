@@ -4,6 +4,7 @@ import {
   closeEventCallbackType,
   debugFnType,
   frameCallbackType,
+  IStompSocket,
   messageCallbackType,
   wsErrorCallbackType,
 } from './types';
@@ -136,6 +137,11 @@ export class StompConfig {
    * See [Client#discardWebsocketOnCommFailure]{@link Client#discardWebsocketOnCommFailure}.
    */
   public discardWebsocketOnCommFailure?: boolean;
+
+  /**
+   * See [Client#onSocketDiscard]{@link Client#onSocketDiscard}.
+   */
+  public onSocketDiscard?: (socket: IStompSocket) => void;
 
   /**
    * See [Client#onChangeState]{@link Client#onChangeState}.

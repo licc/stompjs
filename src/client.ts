@@ -295,6 +295,14 @@ export class Client {
   public discardWebsocketOnCommFailure: boolean;
 
   /**
+   * This callback will receive the socket after it has been discarded.
+   * If your socket implementation supports quick terminate
+   * (for example `ws` npm package), you may call that.
+   *
+   */
+  public onSocketDiscard: (socket: IStompSocket) => void;
+
+  /**
    * version of STOMP protocol negotiated with the server, READONLY
    */
   get connectedVersion(): string {
@@ -353,6 +361,7 @@ export class Client {
     this.onWebSocketError = noOp;
     this.logRawCommunication = false;
     this.onChangeState = noOp;
+    this.onSocketDiscard = noOp;
 
     // These parameters would typically get proper values before connect is called
     this.connectHeaders = {};
@@ -379,7 +388,9 @@ export class Client {
    */
   public activate(): void {
     if (this.state === ActivationState.DEACTIVATING) {
-      this.debug('Still DEACTIVATING, please await call to deactivate before trying to re-activate');
+      this.debug(
+        'Still DEACTIVATING, please await call to deactivate before trying to re-activate'
+      );
       throw new Error('Still DEACTIVATING, can not activate now');
     }
 
@@ -426,6 +437,7 @@ export class Client {
       logRawCommunication: this.logRawCommunication,
       appendMissingNULLonIncoming: this.appendMissingNULLonIncoming,
       discardWebsocketOnCommFailure: this.discardWebsocketOnCommFailure,
+      onSocketDiscard: this.onSocketDiscard,
 
       onConnect: frame => {
         if (!this.active) {
