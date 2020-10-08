@@ -34,6 +34,11 @@ export class StompConfig {
   public webSocketFactory?: () => any;
 
   /**
+   * See [Client#connectionTimeout]{@link Client#connectionTimeout}.
+   */
+  public connectionTimeout?: number;
+
+  /**
    * See [Client#reconnectDelay]{@link Client#reconnectDelay}.
    */
   public reconnectDelay?: number;
